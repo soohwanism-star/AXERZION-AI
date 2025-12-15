@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Puter AI Test</title>
+<script src="https://js.puter.com/v2/"></script>
+</head>
+<body>
+
+<input id="msg" placeholder="메시지 입력">
+<button onclick="send()">전송</button>
+<pre id="out"></pre>
+
+<script>
+async function send(){
+  const text = document.getElementById("msg").value;
+  const out = document.getElementById("out");
+
+  try {
+    const res = await puter.ai.chat(text);
+    out.textContent += "\n🤖 " + res;
+  } catch (e) {
+    out.textContent += "\n❌ ERROR: " + e;
+    console.error(e);
+  }
+}
+</script>
+
+</body>
+</html>
