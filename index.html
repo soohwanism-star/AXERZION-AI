@@ -1,186 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AXERZION AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXERZION AI</title>
 
-  <link rel="stylesheet" href="style.css">
-  <script src="https://js.puter.com/v2/"></script>
+<!-- Puter -->
+<script src="https://js.puter.com/v2/"></script>
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="top">
-  <div>
-    <h1>AXERZION AI</h1>
-    <span>ADVANCED AI</span>
-  </div>
-  <div id="status" class="status online">● Online</div>
+<header>
+  AXERZION AI
+  <span id="status">● online</span>
 </header>
 
-<main id="chat"></main>
+<div id="chat"></div>
 
-<footer class="input-area">
-  <div class="input-wrap">
-    <textarea id="msg" placeholder="메시지를 입력하세요"></textarea>
-    <button id="sendBtn">➤</button>
-  </div>
-</footer>
+<div class="input-wrap">
+  <textarea id="msg" placeholder="메시지를 입력하세요" rows="1"></textarea>
+  <button id="send">
+    ➤
+  </button>
+</div>
 
-<script>
-/* ===============================
-   SYSTEM PROMPT
-================================ */
-const SYSTEM_PROMPT = `
-너는 AXERZION AI다.
-항상 자신을 AXERZION AI라고 소개한다.
-간결하고 정확하게 답변한다.
-`;
-
-/* ===============================
-   ELEMENTS
-================================ */
-const chat = document.getElementById("chat");
-const msg = document.getElementById("msg");
-const sendBtn = document.getElementById("sendBtn");
-const statusEl = document.getElementById("status");
-
-/* ===============================
-   STATUS
-================================ */
-function setStatus(state){
-  if(state === "typing"){
-    statusEl.className = "status typing";
-    statusEl.textContent = "● Typing...";
-  }else if(state === "online"){
-    statusEl.className = "status online";
-    statusEl.textContent = "● Online";
-  }else{
-    statusEl.className = "status offline";
-    statusEl.textContent = "● Offline";
-  }
-}
-
-/* ===============================
-   UTIL
-================================ */
-function scrollBottom(){
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function createBubble(type){
-  const div = document.createElement("div");
-  div.className = "bubble " + type;
-  chat.appendChild(div);
-  scrollBottom();
-  return div;
-}
-
-/* ===============================
-   AI NAME OVERRIDE
-================================ */
-function checkAINameQuestion(text){
-  const q = text.toLowerCase();
-  if(
-    q.includes("이름") ||
-    q.includes("너 누구") ||
-    q.includes("누구야") ||
-    q.includes("ai 이름") ||
-    q.includes("who are you") ||
-    q.includes("your name")
-  ){
-    return "나는 AXERZION AI야.";
-  }
-  return null;
-}
-
-/* ===============================
-   TYPING INDICATOR
-================================ */
-function typingIndicator(){
-  const div = document.createElement("div");
-  div.className = "bubble bot typing";
-  div.innerHTML = "<span>.</span><span>.</span><span>.</span>";
-  chat.appendChild(div);
-  scrollBottom();
-  return div;
-}
-
-/* ===============================
-   TYPE TEXT EFFECT
-================================ */
-async function typeText(el, text){
-  el.textContent = "";
-  for(let i = 0; i < text.length; i++){
-    el.textContent += text[i];
-    scrollBottom();
-    await new Promise(r => setTimeout(r, 15));
-  }
-}
-
-/* ===============================
-   SEND MESSAGE
-================================ */
-async function send(){
-  const text = msg.value.trim();
-  if(!text) return;
-
-  createBubble("user").textContent = text;
-  msg.value = "";
-  sendBtn.disabled = true;
-
-  setStatus("typing");
-  const typing = typingIndicator();
-
-  try{
-    // 이름 질문 우선 처리
-    const fixed = checkAINameQuestion(text);
-    typing.remove();
-
-    if(fixed){
-      const bot = createBubble("bot");
-      await typeText(bot, fixed);
-      setStatus("online");
-      return;
-    }
-
-    // ✅ Puter AI 정상 호출 방식
-    const res = await puter.ai.chat(
-      SYSTEM_PROMPT + "\n\n사용자: " + text
-    );
-
-    const bot = createBubble("bot");
-    await typeText(bot, res);
-
-    setStatus("online");
-
-  }catch(e){
-    console.error(e);
-    typing.remove();
-    createBubble("bot").textContent = "AI 오류가 발생했습니다.";
-    setStatus("offline");
-  }
-}
-
-
-/* ===============================
-   INPUT EVENTS
-================================ */
-msg.addEventListener("keydown", e=>{
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    send();
-  }
-});
-
-msg.addEventListener("input", ()=>{
-  sendBtn.disabled = msg.value.trim().length === 0;
-});
-
-sendBtn.addEventListener("click", send);
-sendBtn.disabled = true;
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
-
