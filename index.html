@@ -125,14 +125,11 @@ async function send(){
   const text = msg.value.trim();
   if(!text) return;
 
-  // User (right)
   createBubble("user").textContent = text;
   msg.value = "";
   sendBtn.disabled = true;
 
   setStatus("typing");
-
-  // AI typing dots
   const typing = typingIndicator();
 
   try{
@@ -147,13 +144,10 @@ async function send(){
       return;
     }
 
-    // AI 호출
-    const res = await puter.ai.chat({
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: text }
-      ]
-    });
+    // ✅ Puter AI 정상 호출 방식
+    const res = await puter.ai.chat(
+      SYSTEM_PROMPT + "\n\n사용자: " + text
+    );
 
     const bot = createBubble("bot");
     await typeText(bot, res);
@@ -161,11 +155,13 @@ async function send(){
     setStatus("online");
 
   }catch(e){
+    console.error(e);
     typing.remove();
     createBubble("bot").textContent = "AI 오류가 발생했습니다.";
     setStatus("offline");
   }
 }
+
 
 /* ===============================
    INPUT EVENTS
@@ -187,3 +183,4 @@ sendBtn.disabled = true;
 
 </body>
 </html>
+
