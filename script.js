@@ -35,7 +35,7 @@ async function send(){
 
   // 이름 질문은 로컬 처리 (Puter 안 탐)
   if(text.toLowerCase().includes("이름")){
-    bubble("나는 AXERZION AI야.", "ai");
+    bubble("네 저는 AXERZION AI 입니다.", "ai");
     return;
   }
 
