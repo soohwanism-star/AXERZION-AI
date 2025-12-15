@@ -1,0 +1,97 @@
+/* GPT DESIGN – AXERZION AI */
+
+:root{
+  --bg:#0b0f1a;
+  --panel:#121830;
+  --accent:#5cffb0;
+  --text:#e6e6e6;
+  --sub:#9aa4c7;
+}
+
+*{
+  box-sizing:border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Header */
+.top{
+  padding:14px;
+  background:linear-gradient(90deg,#0f1b3d,#12215c);
+  border-bottom:1px solid #1f2a55;
+}
+
+.top h1{
+  margin:0;
+  font-size:1.4rem;
+  color:var(--accent);
+}
+
+.top span{
+  font-size:0.8rem;
+  color:var(--sub);
+}
+
+/* Chat */
+#chat{
+  flex:1;
+  padding:16px;
+  overflow-y:auto;
+}
+
+/* Message bubbles */
+.bubble{
+  max-width:75%;
+  margin-bottom:10px;
+  padding:10px 14px;
+  border-radius:14px;
+  line-height:1.4;
+}
+
+.user{
+  background:#1f2a55;
+  align-self:flex-end;
+}
+
+.bot{
+  background:#0f3d2a;
+  border:1px solid #1f6f4a;
+}
+
+/* Input */
+.input-area{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  background:var(--panel);
+  border-top:1px solid #1f2a55;
+}
+
+textarea{
+  flex:1;
+  resize:none;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  background:#0b122a;
+  color:white;
+}
+
+button{
+  padding:0 18px;
+  border-radius:10px;
+  border:none;
+  background:var(--accent);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
