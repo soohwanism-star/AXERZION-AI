@@ -13,27 +13,24 @@
 <header class="top">
   <div class="logo">
     <img src="logo.png" alt="logo">
-    <div>
-      <div class="title">AXERZION AI</div>
-      <div id="status" class="status online">● Online</div>
-    </div>
+    <span>AXERZION AI</span>
   </div>
-
-  <button id="themeToggle" class="theme-btn">🌙</button>
 </header>
 
 <div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="side-title">대화</div>
+  <!-- GPT식 사이드바 -->
+  <aside class="sidebar">
+    <button id="newChat" class="new-chat">＋ New chat</button>
     <div id="chatList"></div>
   </aside>
 
+  <!-- 채팅 영역 -->
   <main class="chat-wrap">
     <div id="chat"></div>
 
     <div class="input-bar">
-      <textarea id="msg" rows="1" placeholder="메시지를 입력하세요"></textarea>
-      <button id="send">↑</button>
+      <textarea id="msg" rows="1" placeholder="Message AXERZION AI"></textarea>
+      <button id="send">➤</button>
     </div>
   </main>
 </div>
