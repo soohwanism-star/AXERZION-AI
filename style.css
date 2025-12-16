@@ -6,9 +6,6 @@
   --ai:#171717;
   --text:#eaeaea;
   --sub:#888;
-  --online:#22c55e;
-  --thinking:#eab308;
-  --error:#ef4444;
 }
 
 *{
@@ -18,9 +15,11 @@
 
 body{
   margin:0;
-  height:100vh;
+  height:100dvh;
   background:var(--bg);
   color:var(--text);
+  display:flex;
+  flex-direction:column;
   overflow:hidden;
 }
 
@@ -29,9 +28,6 @@ body{
   position:sticky;
   top:0;
   z-index:10;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
   padding:12px 16px;
   border-bottom:1px solid var(--border);
   background:var(--bg);
@@ -39,60 +35,53 @@ body{
 
 .logo{
   display:flex;
-  gap:10px;
   align-items:center;
+  gap:10px;
 }
 
 .logo img{
-  width:32px;
-  height:32px;
+  width:28px;
+  height:28px;
   filter:invert(1);
-}
-
-.title{ font-weight:600; }
-
-.status{
-  font-size:11px;
-  color:var(--sub);
-}
-.status.online{ color:var(--online); }
-.status.thinking{ color:var(--thinking); }
-.status.error{ color:var(--error); }
-
-.theme-btn{
-  background:none;
-  border:none;
-  color:var(--text);
-  font-size:18px;
-  cursor:pointer;
 }
 
 /* Layout */
 .app{
+  flex:1;
   display:flex;
-  height:calc(100vh - 56px);
+  min-height:0;
 }
 
+/* Sidebar */
 .sidebar{
   width:260px;
-  border-right:1px solid var(--border);
   padding:12px;
+  border-right:1px solid var(--border);
   display:none;
 }
 
-.side-title{
-  font-size:13px;
-  color:var(--sub);
-  margin-bottom:8px;
+.new-chat{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  margin-bottom:12px;
+}
+.new-chat:hover{
+  background:var(--panel);
 }
 
+/* Chat */
 .chat-wrap{
   flex:1;
   display:flex;
   flex-direction:column;
+  min-height:0;
 }
 
-/* Chat */
 #chat{
   flex:1;
   padding:18px;
@@ -108,7 +97,7 @@ body{
   border-radius:18px;
   line-height:1.4;
   white-space:pre-wrap;
-  animation:fade .2s ease;
+  animation:fade .15s ease;
 }
 
 .user{
@@ -124,6 +113,8 @@ body{
 
 /* Input */
 .input-bar{
+  position:sticky;
+  bottom:0;
   display:flex;
   gap:8px;
   padding:10px;
@@ -134,7 +125,6 @@ body{
 textarea{
   flex:1;
   resize:none;
-  max-height:120px;
   border:none;
   outline:none;
   padding:10px 14px;
@@ -143,7 +133,7 @@ textarea{
   color:var(--text);
 }
 
-button#send{
+#send{
   width:38px;
   height:38px;
   border-radius:50%;
@@ -156,28 +146,25 @@ button#send{
 
 /* Anim */
 @keyframes fade{
-  from{opacity:0; transform:translateY(3px);}
+  from{opacity:0; transform:translateY(2px);}
   to{opacity:1;}
 }
 
-/* Light mode */
-body.light{
-  --bg:#ffffff;
-  --panel:#f4f4f4;
-  --border:#dddddd;
-  --user:#e5e5e5;
-  --ai:#f1f1f1;
-  --text:#111;
-  --sub:#666;
-}
-body.light .logo img{
-  filter:invert(0);
-}
-
-/* Responsive */
+/* PC */
 @media(min-width:900px){
   .sidebar{ display:block; }
 }
-@media(max-width:899px){
-  .bubble{ max-width:90%; }
+
+/* 시스템 라이트 모드 (GPT 방식) */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#ffffff;
+    --panel:#f4f4f4;
+    --border:#dddddd;
+    --user:#e5e5e5;
+    --ai:#f1f1f1;
+    --text:#111;
+    --sub:#666;
+  }
+  .logo img{ filter:invert(0); }
 }
