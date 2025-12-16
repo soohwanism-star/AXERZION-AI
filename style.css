@@ -8,9 +8,19 @@
   --sub:#888;
 }
 
+body[data-theme="light"]{
+  --bg:#f5f5f5;
+  --panel:#ffffff;
+  --border:#ddd;
+  --user:#eaeaea;
+  --ai:#ffffff;
+  --text:#111;
+  --sub:#666;
+}
+
 *{
   box-sizing:border-box;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:system-ui, sans-serif;
 }
 
 body{
@@ -20,13 +30,16 @@ body{
   flex-direction:column;
   background:var(--bg);
   color:var(--text);
+  transition:background .3s,color .3s;
 }
 
+/* Header */
 header{
-  padding:14px;
-  text-align:center;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   border-bottom:1px solid var(--border);
-  font-weight:600;
 }
 
 #status{
@@ -35,22 +48,24 @@ header{
   color:var(--sub);
 }
 
-/* Chat area */
+/* Chat */
 #chat{
   flex:1;
   padding:20px;
-  overflow-y:auto;
   display:flex;
   flex-direction:column;
   gap:14px;
+  overflow-y:auto;
 }
 
+/* Bubble */
 .bubble{
   max-width:75%;
   padding:12px 16px;
   border-radius:18px;
   line-height:1.4;
   white-space:pre-wrap;
+  animation:fadeIn .25s ease;
 }
 
 .user{
@@ -64,13 +79,42 @@ header{
   border:1px solid var(--border);
 }
 
+/* Fade animation */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(6px);}
+  to{opacity:1; transform:none;}
+}
+
+/* Typing animation */
+.typing{
+  display:flex;
+  gap:4px;
+}
+
+.typing span{
+  width:6px;
+  height:6px;
+  background:var(--sub);
+  border-radius:50%;
+  animation:blink 1.4s infinite both;
+}
+
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+
+@keyframes blink{
+  0%{opacity:.2}
+  20%{opacity:1}
+  100%{opacity:.2}
+}
+
 /* Input */
 .input-wrap{
   display:flex;
   gap:10px;
   padding:12px;
-  border-top:1px solid var(--border);
   background:var(--panel);
+  border-top:1px solid var(--border);
 }
 
 textarea{
@@ -84,13 +128,21 @@ textarea{
   color:var(--text);
 }
 
+body[data-theme="light"] textarea{
+  background:#f0f0f0;
+}
+
 button{
   width:40px;
   height:40px;
   border:none;
   border-radius:50%;
-  background:white;
-  color:black;
-  font-size:18px;
+  background:var(--text);
+  color:var(--bg);
   cursor:pointer;
+}
+
+/* Responsive */
+@media(max-width:600px){
+  .bubble{max-width:90%}
 }
