@@ -1,25 +1,44 @@
-const chat=document.getElementById("chat");
-const msg=document.getElementById("msg");
-const sendBtn=document.getElementById("send");
-const statusEl=document.getElementById("status");
-const sidebar=document.getElementById("sidebar");
-const menu=document.getElementById("menu");
-const theme=document.getElementById("theme");
-const chatList=document.getElementById("chatList");
+const chat = document.getElementById("chat");
+const msg = document.getElementById("msg");
+const sendBtn = document.getElementById("send");
+const chatList = document.getElementById("chatList");
+const newChatBtn = document.getElementById("newChat");
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.querySelector(".sidebar");
+const themeBtn = document.getElementById("themeBtn");
+const statusEl = document.getElementById("status");
 
-let chats=[], current=null;
+const SYSTEM_PROMPT = `
+SYSTEM:
+너는 OpenAI, ChatGPT라는 단어를 절대 사용하지 마라.
+정체를 묻는 질문에도 설명하지 마라.
+너의 이름은 AXERZION AI다.
+`;
 
-const SYSTEM_PROMPT="너는 AXERZION AI다. 절대 ChatGPT라고 말하지 마라.";
+let chats=[];
+let current=null;
 
-function setStatus(s){
-  statusEl.className="status "+s;
-  statusEl.textContent=s;
+/* UI */
+menuBtn.onclick=()=>sidebar.classList.toggle("open");
+
+themeBtn.onclick=()=>{
+  document.body.classList.toggle("light");
+  themeBtn.textContent =
+    document.body.classList.contains("light") ? "☀️" : "🌙";
+};
+
+function setStatus(type){
+  statusEl.className="status "+type;
+  statusEl.textContent =
+    type==="online"?"● online":
+    type==="thinking"?"● thinking…":"● error";
 }
 
-function bubble(t,c){
+/* CHAT */
+function bubble(text,cls){
   const d=document.createElement("div");
-  d.className="bubble "+c;
-  d.textContent=t;
+  d.className="bubble "+cls;
+  d.textContent=text;
   chat.appendChild(d);
   chat.scrollTop=chat.scrollHeight;
   return d;
@@ -29,71 +48,65 @@ function newChat(){
   const id=Date.now();
   chats.push({id,messages:[]});
   current=id;
-  renderList();
   chat.innerHTML="";
+  renderList();
 }
+newChatBtn.onclick=newChat;
 
 function renderList(){
   chatList.innerHTML="";
   chats.forEach(c=>{
-    const w=document.createElement("div");
-    w.className="chat-item";
-    w.innerHTML=`<span>채팅</span><button>🗑</button>`;
-    w.onclick=()=>loadChat(c.id);
-    w.querySelector("button").onclick=e=>{
-      e.stopPropagation();
-      chats=chats.filter(x=>x.id!==c.id);
-      if(current===c.id) newChat();
-      renderList();
+    const d=document.createElement("div");
+    d.className="chat-item";
+    d.textContent="채팅 "+String(c.id).slice(-4);
+    d.onclick=()=>{
+      current=c.id;
+      loadChat();
+      sidebar.classList.remove("open");
     };
-    chatList.appendChild(w);
+    chatList.appendChild(d);
   });
 }
 
-function loadChat(id){
-  current=id;
+function loadChat(){
   chat.innerHTML="";
-  chats.find(c=>c.id===id).messages.forEach(m=>{
-    bubble(m.text,m.role);
-  });
+  const c=chats.find(x=>x.id===current);
+  c.messages.forEach(m=>bubble(m.text,m.role));
 }
 
+/* SEND */
 sendBtn.onclick=send;
 msg.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault();send();
+    e.preventDefault(); send();
   }
 });
 
 async function send(){
-  const t=msg.value.trim();
-  if(!t) return;
+  const text=msg.value.trim();
+  if(!text) return;
   msg.value="";
-  bubble(t,"user");
+
+  const c=chats.find(x=>x.id===current);
+  c.messages.push({role:"user",text});
+  bubble(text,"user");
+
   setStatus("thinking");
+  const typing=bubble("", "ai typing");
 
-  if(t.includes("이름")){
-    bubble("나는 AXERZION AI야.","ai").classList.add("fade-in");
-    setStatus("online");
-    return;
-  }
-
-  const typing=bubble("…","ai");
   try{
-    const r=await puter.ai.chat(SYSTEM_PROMPT+"\n"+t);
-    typing.textContent=r;
+    const res=await puter.ai.chat(SYSTEM_PROMPT+"\n\n"+text);
+    typing.classList.remove("typing");
+    typing.textContent=res;
     typing.classList.add("fade-in");
     setStatus("online");
+    c.messages.push({role:"ai",text:res});
   }catch{
     typing.textContent="AI 오류가 발생했습니다.";
     setStatus("error");
   }
 }
 
-menu.onclick=()=>sidebar.classList.toggle("open");
-theme.onclick=()=>{
-  document.body.classList.toggle("light");
-  theme.textContent=document.body.classList.contains("light")?"🌞":"🌙";
-};
-
+/* INIT */
+themeBtn.textContent="🌙";
 newChat();
