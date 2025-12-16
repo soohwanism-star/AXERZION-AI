@@ -10,29 +10,27 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="side-top">
-    <button id="newChat">＋ 새 채팅</button>
+  <div class="side-logo">
+    <img src="logo.png">
+    <span>AXERZION AI</span>
   </div>
+
+  <button id="newChat" class="new-chat">＋ 새 채팅</button>
   <div id="chatList"></div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <header class="top">
     <button id="menuBtn" class="menu-btn">☰</button>
-    <div class="logo">
-      <img src="logo.png" alt="logo">
-      <span>AXERZION AI</span>
-    </div>
+    <span id="status" class="status online">● online</span>
     <button id="themeBtn" class="theme-btn">🌙</button>
   </header>
 
   <div id="chat"></div>
 
   <div class="input-wrap">
-    <textarea id="msg" placeholder="메시지를 입력하세요" rows="1"></textarea>
+    <textarea id="msg" rows="1" placeholder="메시지를 입력하세요"></textarea>
     <button id="send">➤</button>
   </div>
 </main>
