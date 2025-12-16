@@ -1,86 +1,172 @@
-const chat = document.getElementById("chat");
-const msg = document.getElementById("msg");
-const sendBtn = document.getElementById("send");
-const chatList = document.getElementById("chatList");
-const newChatBtn = document.getElementById("newChat");
-const menuBtn = document.getElementById("menuBtn");
-const sidebar = document.querySelector(".sidebar");
-const themeBtn = document.getElementById("themeBtn");
-
-let chats = [];
-let current = null;
-
-/* UI */
-menuBtn.onclick = ()=> sidebar.classList.toggle("open");
-themeBtn.onclick = ()=>{
-  document.body.classList.toggle("light");
-};
-
-function bubble(text, cls){
-  const d = document.createElement("div");
-  d.className = "bubble " + cls;
-  d.textContent = text;
-  chat.appendChild(d);
-  chat.scrollTop = chat.scrollHeight;
+:root{
+  --bg:#0d0d0d;
+  --panel:#1a1a1a;
+  --border:#2a2a2a;
+  --user:#2b2b2b;
+  --ai:#171717;
+  --text:#eaeaea;
 }
 
-/* CHAT SYSTEM */
-function newChat(){
-  const id = Date.now();
-  chats.push({id, messages:[]});
-  current = id;
-  renderList();
-  chat.innerHTML = "";
-}
-newChatBtn.onclick = newChat;
-
-function renderList(){
-  chatList.innerHTML="";
-  chats.forEach(c=>{
-    const d = document.createElement("div");
-    d.textContent = "채팅 " + c.id.toString().slice(-4);
-    d.onclick = ()=>{
-      current = c.id;
-      loadChat();
-      sidebar.classList.remove("open");
-    };
-    chatList.appendChild(d);
-  });
+.light{
+  --bg:#f7f7f7;
+  --panel:#ffffff;
+  --border:#ddd;
+  --user:#e5e5e5;
+  --ai:#f1f1f1;
+  --text:#111;
 }
 
-function loadChat(){
-  chat.innerHTML="";
-  const c = chats.find(x=>x.id===current);
-  c.messages.forEach(m=>bubble(m.text,m.role));
+*{
+  box-sizing:border-box;
+  font-family:system-ui, sans-serif;
 }
 
-/* SEND */
-sendBtn.onclick = send;
-msg.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault(); send();
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  height:100dvh;
+  display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:260px;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  padding:12px;
+}
+
+.side-top button{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:none;
+  color:var(--text);
+  cursor:pointer;
+}
+
+#chatList div{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  background:var(--bg);
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.top{
+  height:56px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 12px;
+  border-bottom:1px solid var(--border);
+}
+
+.menu-btn,.theme-btn{
+  background:none;
+  border:none;
+  color:var(--text);
+  font-size:20px;
+  cursor:pointer;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:600;
+}
+
+.logo img{
+  width:24px;
+  filter:invert(1);
+}
+
+.light .logo img{
+  filter:invert(0);
+}
+
+#chat{
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.bubble{
+  max-width:75%;
+  padding:12px 16px;
+  border-radius:18px;
+  animation:fade .2s ease;
+}
+
+.user{
+  align-self:flex-end;
+  background:var(--user);
+}
+
+.ai{
+  align-self:flex-start;
+  background:var(--ai);
+  border:1px solid var(--border);
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1}
+}
+
+/* INPUT */
+.input-wrap{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  border-top:1px solid var(--border);
+  background:var(--panel);
+}
+
+textarea{
+  flex:1;
+  resize:none;
+  border:none;
+  outline:none;
+  padding:12px 14px;
+  border-radius:20px;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button#send{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:none;
+  background:var(--text);
+  color:var(--bg);
+  cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    height:100%;
+    transform:translateX(-100%);
+    transition:.25s;
+    z-index:10;
   }
-});
-
-async function send(){
-  const text = msg.value.trim();
-  if(!text) return;
-  msg.value="";
-
-  const c = chats.find(x=>x.id===current);
-  c.messages.push({role:"user",text});
-  bubble(text,"user");
-
-  const typing = document.createElement("div");
-  typing.className="bubble ai";
-  typing.textContent="…";
-  chat.appendChild(typing);
-
-  const res = await puter.ai.chat("너는 AXERZION AI다.\n\n"+text);
-  typing.textContent = res;
-
-  c.messages.push({role:"ai",text:res});
+  .sidebar.open{transform:translateX(0);}
 }
-
-/* INIT */
-newChat();
