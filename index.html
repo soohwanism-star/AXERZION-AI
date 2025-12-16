@@ -5,40 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AXERZION AI</title>
 
-<!-- Puter -->
 <script src="https://js.puter.com/v2/"></script>
-
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="top">
   <div class="logo">
-    <img src="logo.png" alt="AXERZION AI">
+    <img src="logo.png" alt="logo">
     <div>
       <div class="title">AXERZION AI</div>
       <div id="status" class="status online">● Online</div>
     </div>
   </div>
+
+  <button id="themeToggle" class="theme-btn">🌙</button>
 </header>
 
 <div class="app">
-  <!-- 사이드바 (PC) -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="side-title">대화</div>
     <div id="chatList"></div>
   </aside>
 
-  <!-- 채팅 -->
   <main class="chat-wrap">
     <div id="chat"></div>
 
-    <!-- 입력 -->
     <div class="input-bar">
       <textarea id="msg" rows="1" placeholder="메시지를 입력하세요"></textarea>
-      <button id="send" aria-label="send">
-        ➤
-      </button>
+      <button id="send">↑</button>
     </div>
   </main>
 </div>
