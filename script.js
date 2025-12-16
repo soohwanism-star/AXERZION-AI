@@ -2,11 +2,16 @@ const chat = document.getElementById("chat");
 const msg = document.getElementById("msg");
 const sendBtn = document.getElementById("send");
 const statusEl = document.getElementById("status");
+const themeBtn = document.getElementById("themeToggle");
 
-function setStatus(text){
-  statusEl.textContent = "● " + text;
+let identityLocked = false;
+
+/* Status */
+function setStatus(t){
+  statusEl.textContent = t;
 }
 
+/* Bubble */
 function bubble(text, cls){
   const div = document.createElement("div");
   div.className = "bubble " + cls;
@@ -16,9 +21,29 @@ function bubble(text, cls){
   return div;
 }
 
-// Enter 전송
+/* Typing */
+function typingBubble(){
+  const div = document.createElement("div");
+  div.className = "bubble ai";
+  div.innerHTML = `
+    <div class="typing">
+      <span></span><span></span><span></span>
+    </div>
+  `;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+/* Auto resize */
+msg.addEventListener("input", ()=>{
+  msg.style.height="auto";
+  msg.style.height=msg.scrollHeight+"px";
+});
+
+/* Enter send */
 msg.addEventListener("keydown", e=>{
-  if(e.key === "Enter" && !e.shiftKey){
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
@@ -26,41 +51,51 @@ msg.addEventListener("keydown", e=>{
 
 sendBtn.onclick = send;
 
+/* Theme toggle */
+themeBtn.onclick = ()=>{
+  const theme = document.body.dataset.theme;
+  document.body.dataset.theme = theme==="dark" ? "light" : "dark";
+  themeBtn.textContent = theme==="dark" ? "🌙" : "☀️";
+};
+
+/* Send */
 async function send(){
   const text = msg.value.trim();
   if(!text) return;
-  msg.value = "";
+  msg.value="";
+  msg.style.height="auto";
 
-  bubble(text, "user");
+  bubble(text,"user");
 
-  // 이름 질문은 로컬 처리 (Puter 안 탐)
-  if(text.toLowerCase().includes("이름")){
-    bubble("네 저는 AXERZION AI 입니다.", "ai");
+  const q = text.toLowerCase();
+
+  if(q.includes("이름") || q.includes("누구")){
+    bubble("나는 AXERZION AI야.","ai");
+    identityLocked = true;
     return;
   }
 
-  if(!window.puter || !puter.ai){
-    bubble("AI 엔진 연결 실패", "ai");
-    setStatus("offline");
+  if(identityLocked && (q==="진짜?" || q==="맞아?")){
+    bubble("응. 나는 AXERZION AI야.","ai");
+    return;
+  }
+
+  if(!window.puter){
+    bubble("AI 연결 실패","ai");
     return;
   }
 
   setStatus("thinking...");
-
-  // 타이핑 표시
-  const typing = bubble("…", "ai");
+  const typing = typingBubble();
 
   try{
-    // ⚠️ 가장 안정적인 Puter 호출 방식
     const res = await puter.ai.chat(
       "너는 AXERZION AI다.\n\n" + text
     );
-
     typing.textContent = res;
     setStatus("online");
-  }catch(e){
-    console.error(e);
-    typing.textContent = "AI 오류가 발생했습니다.";
+  }catch{
+    typing.textContent = "오류 발생";
     setStatus("error");
   }
 }
