@@ -3,12 +3,14 @@ const msg = document.getElementById("msg");
 const sendBtn = document.getElementById("send");
 const statusEl = document.getElementById("status");
 const themeBtn = document.getElementById("themeToggle");
+const newChatBtn = document.getElementById("newChat");
 
 let identityLocked = false;
 
 /* Status */
-function setStatus(t){
-  statusEl.textContent = t;
+function setStatus(text, cls){
+  statusEl.textContent = text;
+  statusEl.className = cls;
 }
 
 /* Bubble */
@@ -58,10 +60,20 @@ themeBtn.onclick = ()=>{
   themeBtn.textContent = theme==="dark" ? "🌙" : "☀️";
 };
 
+/* New chat */
+function resetChat(){
+  chat.innerHTML = "";
+  identityLocked = false;
+  setStatus("online","online");
+  bubble("새 대화를 시작했어.","ai");
+}
+newChatBtn.onclick = resetChat;
+
 /* Send */
 async function send(){
   const text = msg.value.trim();
   if(!text) return;
+
   msg.value="";
   msg.style.height="auto";
 
@@ -82,10 +94,11 @@ async function send(){
 
   if(!window.puter){
     bubble("AI 연결 실패","ai");
+    setStatus("error","error");
     return;
   }
 
-  setStatus("thinking...");
+  setStatus("thinking","thinking");
   const typing = typingBubble();
 
   try{
@@ -93,9 +106,9 @@ async function send(){
       "너는 AXERZION AI다.\n\n" + text
     );
     typing.textContent = res;
-    setStatus("online");
+    setStatus("online","online");
   }catch{
-    typing.textContent = "오류 발생";
-    setStatus("error");
+    typing.textContent = "오류가 발생했습니다.";
+    setStatus("error","error");
   }
 }
