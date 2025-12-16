@@ -1,3 +1,6 @@
+/* =========================
+   THEME VARIABLES
+========================= */
 :root{
   --bg:#0d0d0d;
   --panel:#1a1a1a;
@@ -5,40 +8,70 @@
   --user:#2b2b2b;
   --ai:#171717;
   --text:#eaeaea;
+  --sub:#888;
 }
 
 .light{
-  --bg:#f7f7f7;
+  --bg:#f6f6f6;
   --panel:#ffffff;
   --border:#ddd;
   --user:#e5e5e5;
   --ai:#f1f1f1;
   --text:#111;
+  --sub:#666;
 }
 
+/* =========================
+   GLOBAL
+========================= */
 *{
   box-sizing:border-box;
-  font-family:system-ui, sans-serif;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
   height:100dvh;
   display:flex;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
 }
 
-/* SIDEBAR */
+/* =========================
+   SIDEBAR
+========================= */
 .sidebar{
   width:260px;
   background:var(--panel);
   border-right:1px solid var(--border);
   padding:12px;
+  display:flex;
+  flex-direction:column;
 }
 
-.side-top button{
-  width:100%;
+.side-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+}
+
+.side-logo img{
+  width:26px;
+  filter:invert(1);
+}
+.light .side-logo img{
+  filter:invert(0);
+}
+
+.side-logo span{
+  font-weight:600;
+  font-size:15px;
+}
+
+.new-chat{
+  margin:8px 0 12px;
   padding:10px;
   border-radius:10px;
   border:1px solid var(--border);
@@ -47,19 +80,37 @@ body{
   cursor:pointer;
 }
 
-#chatList div{
-  margin-top:10px;
-  padding:10px;
-  border-radius:10px;
-  cursor:pointer;
-  background:var(--bg);
+#chatList{
+  flex:1;
+  overflow-y:auto;
 }
 
-/* MAIN */
+.chat-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px;
+  margin-bottom:6px;
+  border-radius:10px;
+  background:var(--bg);
+  cursor:pointer;
+}
+
+.chat-item button{
+  background:none;
+  border:none;
+  color:var(--sub);
+  cursor:pointer;
+}
+
+/* =========================
+   MAIN AREA
+========================= */
 .main{
   flex:1;
   display:flex;
   flex-direction:column;
+  height:100dvh;
 }
 
 .top{
@@ -69,32 +120,37 @@ body{
   gap:10px;
   padding:0 12px;
   border-bottom:1px solid var(--border);
+  background:var(--bg);
+  flex-shrink:0;
 }
 
-.menu-btn,.theme-btn{
+.menu-btn{
+  display:none;
   background:none;
   border:none;
+  font-size:22px;
   color:var(--text);
-  font-size:20px;
   cursor:pointer;
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-weight:600;
+.theme-btn{
+  background:none;
+  border:none;
+  font-size:18px;
+  cursor:pointer;
 }
 
-.logo img{
-  width:24px;
-  filter:invert(1);
+.status{
+  margin-left:auto;
+  font-size:12px;
 }
+.status.online{ color:#4caf50; }
+.status.thinking{ color:#ffc107; }
+.status.error{ color:#f44336; }
 
-.light .logo img{
-  filter:invert(0);
-}
-
+/* =========================
+   CHAT AREA
+========================= */
 #chat{
   flex:1;
   padding:20px;
@@ -108,7 +164,9 @@ body{
   max-width:75%;
   padding:12px 16px;
   border-radius:18px;
-  animation:fade .2s ease;
+  line-height:1.4;
+  white-space:pre-wrap;
+  animation:fadeIn .15s ease;
 }
 
 .user{
@@ -122,18 +180,22 @@ body{
   border:1px solid var(--border);
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(4px)}
-  to{opacity:1}
+/* typing animation */
+.typing::after{
+  content:'';
+  animation:dots 1.2s steps(4,end) infinite;
 }
 
-/* INPUT */
+/* =========================
+   INPUT
+========================= */
 .input-wrap{
   display:flex;
   gap:10px;
   padding:12px;
   border-top:1px solid var(--border);
   background:var(--panel);
+  flex-shrink:0;
 }
 
 textarea{
@@ -145,28 +207,54 @@ textarea{
   border-radius:20px;
   background:var(--bg);
   color:var(--text);
+  font-size:14px;
 }
 
-button#send{
+#send{
   width:42px;
   height:42px;
   border-radius:50%;
   border:none;
   background:var(--text);
   color:var(--bg);
+  font-size:18px;
   cursor:pointer;
 }
 
-/* MOBILE */
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(4px); }
+  to{ opacity:1; transform:none; }
+}
+
+@keyframes dots{
+  0%{ content:''; }
+  25%{ content:'.'; }
+  50%{ content:'..'; }
+  75%{ content:'...'; }
+}
+
+/* =========================
+   MOBILE
+========================= */
 @media(max-width:900px){
+  .menu-btn{
+    display:block;
+  }
+
   .sidebar{
     position:fixed;
     left:0;
     top:0;
-    height:100%;
+    height:100dvh;
     transform:translateX(-100%);
-    transition:.25s;
-    z-index:10;
+    transition:.25s ease;
+    z-index:20;
   }
-  .sidebar.open{transform:translateX(0);}
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
 }
