@@ -5,25 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AXERZION AI</title>
 
-<!-- Puter -->
 <script src="https://js.puter.com/v2/"></script>
-
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="dark">
 
 <header>
-  AXERZION AI
-  <span id="status">● online</span>
+  <div>
+    AXERZION AI
+    <span id="status">online</span>
+  </div>
+  <button id="themeToggle">☼</button>
 </header>
 
 <div id="chat"></div>
 
 <div class="input-wrap">
-  <textarea id="msg" placeholder="메시지를 입력하세요" rows="1"></textarea>
-  <button id="send">
-    ➤
-  </button>
+  <textarea id="msg" rows="1" placeholder="메시지를 입력하세요"></textarea>
+  <button id="send">△</button>
 </div>
 
 <script src="script.js"></script>
