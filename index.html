@@ -2,56 +2,47 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AXERZION AI</title>
 
+<!-- Puter -->
 <script src="https://js.puter.com/v2/"></script>
+
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="dark">
+<body>
+
+<header class="top">
+  <div class="logo">
+    <img src="logo.png" alt="AXERZION AI">
+    <div>
+      <div class="title">AXERZION AI</div>
+      <div id="status" class="status online">● Online</div>
+    </div>
+  </div>
+</header>
 
 <div class="app">
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="logo">
-      <div class="logo-icon">△</div>
-      <div class="logo-text">AXERZION</div>
-    </div>
-
-    <button id="newChatSide" class="new-chat">＋ New Chat</button>
+  <!-- 사이드바 (PC) -->
+  <aside class="sidebar">
+    <div class="side-title">대화</div>
     <div id="chatList"></div>
   </aside>
 
-  <!-- Main -->
-  <main class="main">
-    <header>
-      <div class="left">
-        <button id="menuBtn" class="menu-btn">☰</button>
-        <span class="title">AXERZION AI</span>
-        <span id="status" class="online">online</span>
-      </div>
-
-      <div class="right">
-        <button id="themeToggle">☀️</button>
-      </div>
-    </header>
-
+  <!-- 채팅 -->
+  <main class="chat-wrap">
     <div id="chat"></div>
-    
-<div class="input-wrap">
-  <div class="input-box">
-    <textarea id="msg" placeholder="메시지를 입력하세요" rows="1"></textarea>
-    <button id="send" aria-label="send">
-      ➤
-    </button>
-  </div>
-</div>
 
-
+    <!-- 입력 -->
+    <div class="input-bar">
+      <textarea id="msg" rows="1" placeholder="메시지를 입력하세요"></textarea>
+      <button id="send" aria-label="send">
+        ➤
+      </button>
+    </div>
+  </main>
 </div>
 
 <script src="script.js"></script>
 </body>
 </html>
-
